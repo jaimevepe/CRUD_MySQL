@@ -1,6 +1,6 @@
 import './App.css';
 import {useState} from "react";
-
+import axios from "axios";
 
 function App() {
 
@@ -10,6 +10,19 @@ function App() {
   const [position, setPosition] = useState('');
   const [wage, setWage] = useState(0);
 
+  const addEmployee = () => {
+    axios.post('http://localhost:3001/create', { //sending this obj to the back end
+      name: name,                          //which have to match the back end variables
+      age: age,
+      country: country,
+      position: position,
+      wage: wage
+    }).then((response) => {
+      console.log(response.data)
+    }).then(err => {
+      console.log(`Error with axios.post: ${err}`)
+    })
+  }
 
   return (
     <div className="App">
@@ -50,7 +63,7 @@ function App() {
           }}
         />
 
-        <button>Add Employee</button>
+        <button onClick={addEmployee}>Add Employee</button>
       </div>
     </div>
   );
