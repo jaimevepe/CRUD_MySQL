@@ -10,6 +10,8 @@ function App() {
   const [position, setPosition] = useState('');
   const [wage, setWage] = useState(0);
 
+  const [employeeList, setEmployeeList] = useState([])
+
   const addEmployee = () => {
     axios.post('http://localhost:3001/create', { //sending this obj to the back end
       name: name,                          //which have to match the back end variables
@@ -17,11 +19,23 @@ function App() {
       country: country,
       position: position,
       wage: wage
-    }).then((response) => {
-      console.log(response.data)
-    }).then(err => {
-      console.log(`Error with axios.post: ${err}`)
     })
+    .then(response => {
+      if(!response.ok){ // TODO: if not ok, stop and throw an error
+        console.log(response.data)
+       }
+      console.log(response)
+    })
+    .catch(err => {
+      console.error("Error from Axios.Post")
+    })
+  }
+
+  const getEmployess = () => {
+    axios.get("http://localhost:3001/employees")
+      .then(response => {
+        console.log(response.data)
+      })
   }
 
   return (
@@ -64,6 +78,7 @@ function App() {
         />
 
         <button onClick={addEmployee}>Add Employee</button>
+        <button onClick={getEmployess}>Show Employees</button>
       </div>
     </div>
   );
