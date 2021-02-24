@@ -34,7 +34,7 @@ function App() {
   const getEmployess = () => {
     axios.get("http://localhost:3001/employees")
       .then(response => {
-        console.log(response.data)
+        setEmployeeList(response.data)
       })
   }
 
@@ -79,6 +79,16 @@ function App() {
 
         <button onClick={addEmployee}>Add Employee</button>
         <button onClick={getEmployess}>Show Employees</button>
+
+        {employeeList.map((val, key) => {
+          return <div className="employee"> 
+                  <h3>Name: <p>{val.name}</p></h3>
+                  <h3>Age: <p>{val.age}</p></h3>     
+                  <h3>Country: <p>{val.country}</p></h3>     
+                  <h3>Position: <p>{val.position}</p></h3>     
+                  <h3>Wage: <p>{val.wage}</p></h3>             
+                </div>
+        })}
       </div>
     </div>
   );
