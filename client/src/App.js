@@ -10,6 +10,8 @@ function App() {
   const [position, setPosition] = useState('');
   const [wage, setWage] = useState(0);
 
+  const [newWage, setNewWage] = useState(0)
+
   const [employeeList, setEmployeeList] = useState([])
 
   const addEmployee = () => {
@@ -26,6 +28,17 @@ function App() {
        }
       console.log(response)
     })
+    .then(()=> {
+      setEmployeeList([ // will show employee without having to press show emp again
+        ...employeeList, {
+            name: name,
+            age: age,
+            country: country,
+            position: position,
+            wage: wage
+        }
+      ])
+    })
     .catch(err => {
       console.error("Error from Axios.Post")
     })
@@ -36,6 +49,40 @@ function App() {
       .then(response => {
         setEmployeeList(response.data)
       })
+      .catch(err => console.log(err))
+  }
+
+  const updateWage = (id) => {
+    axios.put("http://localhost:3001/update", { wage: newWage, id: id })
+    .then(() => {
+        setEmployeeList(
+          employeeList.map((val) => {
+            return val.id === id
+              ? {
+                  id: val.id,
+                  name: val.name,
+                  country: val.country,
+                  age: val.age,
+                  position: val.position,
+                  wage: newWage,
+                }
+              : val;
+            })
+          );
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  };
+
+  const deleteEmployee = (id) => {
+    axios.delete(`http://localhost:3001/delete/${id}`)
+      .then(() => {
+        setEmployeeList(employeeList.filter((val) => {
+          return val.id !== id
+        }))
+      })
+      .catch(err => console.log(err))
   }
 
   return (
@@ -43,13 +90,17 @@ function App() {
       <div className="info">
         <label>Name:</label>
         <input 
-        type="text"
-        onChange={(e)=> { //storing input values into name state
-          setName(e.target.value)
-        }}
+          required
+          placeholder="Enter Name..."
+          type="text"
+          onChange={(e)=> { //storing input values into name state
+            setName(e.target.value)
+          }}
         />
         <label>Age:</label>
         <input 
+          required
+          placeholder="Enter Age..."
           type="number"
           onChange={(e)=> {
             setAge(e.target.value)
@@ -57,6 +108,8 @@ function App() {
         />
         <label>Country:</label>
         <input 
+          required
+          placeholder="Enter Country..."
           type="text"
           onChange={(e)=> {
             setCountry(e.target.value)
@@ -64,32 +117,57 @@ function App() {
         />
         <label>Position:</label>
         <input 
+          required
+          placeholder="Enter Position..."
           type="text"
           onChange={(e)=> {
             setPosition(e.target.value)
           }}
         />
         <label>Wage (year):</label>
-        <input 
+        <input
+          required
+          placeholder="Enter Wage..." 
           type="number"
           onChange={(e)=> {
             setWage(e.target.value)
           }}
         />
-
+       </div>
+       <div className="btn">
         <button onClick={addEmployee}>Add Employee</button>
         <button onClick={getEmployess}>Show Employees</button>
+       </div>
+       
 
         {employeeList.map((val, key) => {
-          return <div className="employee"> 
+          return <div key={val.id}> 
+                  <div className="employee">
                   <h3>Name: <p>{val.name}</p></h3>
                   <h3>Age: <p>{val.age}</p></h3>     
                   <h3>Country: <p>{val.country}</p></h3>     
                   <h3>Position: <p>{val.position}</p></h3>     
-                  <h3>Wage: <p>{val.wage}</p></h3>             
+                  <h3>Wage: <p>{val.wage}</p></h3> 
+
+                  <div className="update"> 
+                    <input 
+                      type="text" 
+                      placeholder="Update wage"
+                      onChange={(e) => {
+                      setNewWage(e.target.value)
+                    }}
+                    /> 
+                    <button onClick={() => {updateWage(val.id)}}>Update</button>
+                    <br/>
+                    <br/>
+                    <button onClick={() => {deleteEmployee(val.id)}}>Delete</button>
+                    
+                   </div>    
+                  </div>
+                           
                 </div>
         })}
-      </div>
+      
     </div>
   );
 }
