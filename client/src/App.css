@@ -40,11 +40,14 @@
 .employee{
   font-family: 'Courier New', Courier, monospace;
   display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
-  width: 90%;
+  width: 90vw;
   height: auto;
   border: 1px solid black;
-  margin: 10px;
+  margin: auto;
+  margin-top: 10px;
   background-color: white;
 }
 
