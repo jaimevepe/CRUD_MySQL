@@ -39,7 +39,7 @@ app.post("/create", (req, res) => {
 
     //the 5 ? represent the variables that we will send like name, age, ect
     db.query('INSERT INTO employees(name, age, country, position, wage) VALUES (?,?,?,?,?)',
-    [name, age, country, position, wage], 
+    [name, age, country, position, wage],
     (err, result) => {
         if(err){
           console.log(`Error from /create: ${err.message}`)
